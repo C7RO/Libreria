@@ -1,0 +1,69 @@
+CREATE TABLE scaffali(
+url varchar(40) primary KEY,
+nome varchar(40) NOT NULL UNIQUE
+);
+
+CREATE TABLE utenti(
+email varchar(50) PRIMARY KEY,
+username varchar(40) NOT NULL UNIQUE,
+password varchar(20) NOT NULL
+);
+
+create table libri(
+codLibro INTEGER PRIMARY KEY AUTO_INCREMENT,
+url varchar(40) NOT NULL,
+username varchar(40),
+urls varchar(40),
+FOREIGN KEY(username) REFERENCES utenti(username) on UPDATE CASCADE on DELETE CASCADE,
+FOREIGN KEY(urls)REFERENCES scaffali(url) on UPDATE CASCADE on DELETE CASCADE,
+foreign key(url) references descrizioneLibri(url) on update cascade on delete cascade
+);
+
+create table descrizioneLibri(
+url varchar(40) PRIMARY KEY,
+titolo varchar(40) not null,
+sottotitolo varchar(40),
+autore varchar(20) not null,
+annoPubblicazione int not null check(annoPubblicazione >0),
+genere varchar(40),
+casaEditrice varchar(40),
+descrizione varchar(80) not null
+);
+
+create table recensioni(
+username varchar(40),
+url varchar(40),
+valutazione integer not null check(valutazione BETWEEN 1 and 5),
+valutazioneS integer not null check(valutazioneS BETWEEN 1 and 5),
+commento varchar(80),
+PRIMARY KEY(username,url),
+FOREIGN KEY(username) REFERENCES utenti(username) on UPDATE CASCADE on DELETE CASCADE,
+FOREIGN KEY(url)REFERENCES descrizionelibri(url) on UPDATE CASCADE on DELETE CASCADE
+);
+
+create table riassunti(
+username varchar(40),
+url varchar(40),
+riassunto TEXT,
+PRIMARY KEY(username,url),
+FOREIGN KEY(username) REFERENCES utenti(username) on UPDATE CASCADE on DELETE CASCADE,
+FOREIGN KEY(url)REFERENCES descrizionelibri(url) on UPDATE CASCADE on DELETE CASCADE
+);
+
+create table prenotazioni(
+username varchar(40),
+url varchar(40),
+PRIMARY KEY(username,url),
+FOREIGN KEY(username) REFERENCES utenti(username) on UPDATE CASCADE on DELETE CASCADE,
+FOREIGN KEY(url)REFERENCES descrizionelibri(url) on UPDATE CASCADE on DELETE CASCADE
+);
+
+create table storico(
+cod INTEGER PRIMARY KEY AUTO_INCREMENT,
+username varchar(40) not null,
+codLibro INTEGER not null,
+dataPrestito Date not null,
+dataRestituzione Date,
+FOREIGN KEY(username) REFERENCES utenti(username) on UPDATE CASCADE on DELETE CASCADE,
+FOREIGN KEY(codLibro)REFERENCES libri(codLibro) on UPDATE CASCADE on DELETE CASCADE
+);
